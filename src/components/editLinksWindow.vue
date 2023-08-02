@@ -1,15 +1,11 @@
 <template>
     <v-card-text>
         <v-form ref="linkForm">
-            <v-text-field :rules="validationRules" label="Link*" variant="solo-filled" v-model="currentLink.url"></v-text-field>
-            <v-text-field :rules="validationRules" label="Title*" variant="solo-filled" v-model="currentLink.title"></v-text-field>
+            <v-text-field :rules="validationRuleRequiredField" label="Link*" variant="solo-filled" v-model="currentLink.url"></v-text-field>
+            <v-text-field :rules="validationRuleRequiredField" label="Title*" variant="solo-filled" v-model="currentLink.title"></v-text-field>
             <v-textarea label="Notes" variant="solo-filled" v-model="currentLink.notes"></v-textarea>
             <v-select label="Collection" :items="collections"
-                variant="solo-filled" v-model="currentCollection" item-title="title" return-object>
-            <!-- <template v-slot:selection="{item}">
-                <v-list-item :title="item.title">
-                </v-list-item>
-            </template> -->
+                variant="solo-filled" v-model="currentCollection" item-title="title" return-object :rules="validationRuleRequiredCollection">
             </v-select>    
         </v-form>
     </v-card-text>
@@ -29,13 +25,17 @@ import { useLinkStore } from '../stores/links.ts'
 import { Ref, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useCollectionStore } from '../stores/collections';
+import { useUtilsStore } from '../stores/utils';
 
 const linkStore = useLinkStore();
 const { linkForm, currentLink} = storeToRefs(linkStore);
-const { saveLink, closeEdit, validationRules} = linkStore;
+const { saveLink, closeEdit } = linkStore;
 
 const collectionStore = useCollectionStore();
-const { collections, currentCollection } = storeToRefs(collectionStore); 
+const { collections, currentCollection } = storeToRefs(collectionStore);
+
+const utilsStore = useUtilsStore();
+const { validationRuleRequiredField, validationRuleRequiredCollection } = utilsStore;
 
 const saveButtonLoading: Ref<boolean> = ref(false);
 

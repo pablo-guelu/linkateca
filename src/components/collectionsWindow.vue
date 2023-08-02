@@ -1,27 +1,38 @@
 <template>
     <div class="d-flex align-center">
         <v-select class="px-3 mt-3" label="Collection" :items="collections" variant="solo-filled"
-            v-model="currentCollection" return-object @update:model-value="() => { console.log(currentCollection) }"
-            :key="collectionSelectKey"></v-select>
+            v-model="currentCollection" return-object @update:model-value="(value) => {
+                currentCollectionIndex = value.index
+                console.log(currentCollectionIndex, currentCollection);
+            }" :key="collectionSelectKey"></v-select>
         <div class="d-flex pe-3" v-if="collections.length > 0">
+            <!-- <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-folder-plus" @click="addSubCollection"></v-btn> -->
             <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-pencil" @click="editCollection"></v-btn>
             <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-delete"
                 @click="deleteCollection"></v-btn>
         </div>
     </div>
 
-    <v-data-table height="300" :headers="headers" :items="currentCollection.links" items-per-page="4" :search="search">
+    <v-data-table height="450" :headers="headers" :items="currentCollection.links" items-per-page="6" :search="search">
         <!-- link display -->
         <template v-slot:item="{ item }">
-            <v-list lines="two" class="pa-0">
-                <v-list-item height="65">
+            <v-list class="pa-0">
+                <v-list-item :height="item.raw.active ? 130 : 65">
 
-                    <v-list-item-title class="d-flex">
+                    <v-list-item-title class="d-flex" @click="expandNotes(item.raw)">
                         <v-icon v-if="item.raw.favicon" class="me-1">
                             <v-img :src="item.raw.favicon" :alt="`${item.raw.title} icon`"></v-img>
                         </v-icon>
                         <span class="d-inline-block text-truncate" style="max-width: 425px;">{{ item.raw.title }}</span>
                     </v-list-item-title>
+
+
+                    <v-fade-transition>
+                        <v-list-item-subtitle v-show="item.raw.active" class="mt-2">
+                            <div class="ps-7"> {{ item.raw.notes }} </div>
+                        </v-list-item-subtitle>
+                    </v-fade-transition>
+
 
                     <template v-slot:append>
                         <!-- go to -->
@@ -33,10 +44,13 @@
                         <v-btn class="ma-1" flat icon="mdi-delete" size="32" @click="deleteLink(item.index)"></v-btn>
                     </template>
 
+
+
                 </v-list-item>
                 <v-divider></v-divider>
             </v-list>
         </template>
+
     </v-data-table>
 </template>
 
@@ -46,9 +60,10 @@ import { storeToRefs } from 'pinia';
 import { useLinkStore } from '../stores/links.ts';
 import { ref } from 'vue';
 import { useCollectionStore } from '../stores/collections';
+import { Link } from '../types';
 
 const collectionStore = useCollectionStore();
-const { collections, currentCollection, collectionSelectKey } = storeToRefs(collectionStore);
+const { collections, currentCollection, collectionSelectKey, currentCollectionIndex } = storeToRefs(collectionStore);
 const { editCollection, deleteCollection } = collectionStore;
 
 const linkStore = useLinkStore();
@@ -59,6 +74,10 @@ const headers = ref([
     { title: 'Title', key: 'title' },
     { title: 'Notes', key: 'notes' }
 ]);
+
+const expandNotes = (link: Link) => {
+    link.active = link.active ? false : true
+}
 
 </script>
 

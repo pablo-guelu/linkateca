@@ -2,11 +2,16 @@ import { defineStore, storeToRefs } from 'pinia';
 import { Ref, ref } from 'vue';
 import { Link, LinkEditMode, PopupMode } from '../types';
 import { useCollectionStore } from './collections';
+import { useSettingsStore } from './settings';
 
 export const useLinkStore = defineStore('link', () => {
 
     const collectionStore = useCollectionStore();
     const { popupMode, collections, currentCollection, currentCollectionIndex } = storeToRefs(collectionStore);
+
+    const settingsStore = useSettingsStore();
+    const { defaultCollection } = storeToRefs(settingsStore);
+    const { saveSettings } = settingsStore;
 
     const links: Ref<Link[]> = ref([]);
 
@@ -50,13 +55,19 @@ export const useLinkStore = defineStore('link', () => {
         popupMode.value = PopupMode.EDIT_LINK; // Change the mode to EDIT
     }
 
+    const checkCurrentAndDefault = () => {
+        if (defaultCollection.value.title === currentCollection.value.title) {
+            saveSettings();
+        }
+    }
+
     const saveLink = async () => {
 
         let updatedCollections = [...collections.value];
 
-        let updatedLinks = updatedCollections[currentCollectionIndex.value].links;
+        let updatedLinks = currentCollection.value.links;
 
-        const { valid } = await linkForm.value?.validate()
+        const { valid } = await linkForm.value?.validate();
 
         if (valid) {
 
@@ -68,11 +79,16 @@ export const useLinkStore = defineStore('link', () => {
                 updatedLinks[currentLinkIndex.value] = linkUpdated; // Replace the link at currentLinkIndex
             }
 
+            console.log(collections.value, currentCollectionIndex.value);
+
             updatedCollections[currentCollectionIndex.value].links = updatedLinks;
 
             chrome.storage.local.set({ 'linkaTeca': updatedCollections }).then(() => {
                 popupMode.value = PopupMode.COLLECTIONS;
             });
+
+            checkCurrentAndDefault();
+
         }
     }
 
@@ -85,15 +101,21 @@ export const useLinkStore = defineStore('link', () => {
 
         let updatedCollections = [...collections.value];
 
-        let updatedLinks = updatedCollections[currentCollectionIndex.value].links;
+        let updatedLinks = currentCollection.value.links;
         // create a new array without the deleted link
+
         updatedLinks = [...updatedLinks.slice(0, index), ...updatedLinks.slice(index + 1)];
+
+        currentCollection.value.links = updatedLinks;
 
         updatedCollections[currentCollectionIndex.value].links = updatedLinks;
 
         chrome.storage.local.set({ 'linkaTeca': updatedCollections }).then(() => {
             collections.value = updatedCollections;
         });
+
+        checkCurrentAndDefault();
+
     }
 
     const copyLink = async (link: Link) => {

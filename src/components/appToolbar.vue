@@ -1,31 +1,16 @@
 <template>
     <v-toolbar color="blue-darken-4">
 
-        <v-menu :close-on-content-click="false">
+        <v-menu>
             <template v-slot:activator="{ props: menu }">
                 <v-btn variant="text" icon="mdi-menu" color="white" v-bind="menu"></v-btn>
             </template>
 
-            <v-card width="200">
+            <v-card>
                 <!-- EXPORT -->
                 <v-list density="compact">
-                    <v-list-group>
-                        <template v-slot:activator="{ props: list }">
-                            <v-list-item v-bind="list" :title="items.export.title"></v-list-item>
-                        </template>
-                        <v-list-item v-for="option, index in items.export.exports" :key="index" :title="option.title"
-                            @click="option.action"></v-list-item>
-                    </v-list-group>
-                </v-list>
-                <!-- IMPORT -->
-                <v-list density="compact">
-                    <v-list-group>
-                        <template v-slot:activator="{ props: list }">
-                            <v-list-item v-bind="list" :title="items.import.title"></v-list-item>
-                        </template>
-                        <v-list-item v-for="option, index in items.import.imports" :key="index" :title="option.title"
-                            @click="option.action"></v-list-item>
-                    </v-list-group>
+                    <v-list-item v-for="(item, index) in items" :key="index" :title="item.title"
+                        @click="item.action"></v-list-item>
                 </v-list>
             </v-card>
         </v-menu>
@@ -55,79 +40,54 @@ import { PopupMode } from '../types'
 import { useLinkStore } from '../stores/links.ts'
 import { storeToRefs } from 'pinia';
 import { useCollectionStore } from '../stores/collections';
-import { useBookmarkStore } from '../stores/bookmarks';
+import { useSettingsStore } from '../stores/settings';
 
 const linkStore = useLinkStore();
 const { searchActive, search } = storeToRefs(linkStore);
 const { addLink } = linkStore;
 
 const collectionStore = useCollectionStore();
-const { popupMode, collections } = storeToRefs(collectionStore);
+const { popupMode, collections, jsonUploadOverlayActive } = storeToRefs(collectionStore);
 const { addCollection } = collectionStore;
 
-// const bookmarkStore = useBookmarkStore();
-// const { loadingBookmarksState } = storeToRefs(bookmarkStore);
-// const { addCollectionsFromBookmarks } = bookmarkStore;
+const settingsStore = useSettingsStore();
+const { settingsOverlayActive } = storeToRefs(settingsStore);
 
-const items = {
-    export: {
-        title: 'Export',
-        exports: [
-            {
-                title: 'To JSON',
-                action: () => {
-                    // Convert JavaScript object to JSON string
-                    let jsonString = JSON.stringify({ 'Collections': collections.value });
-
-                    // Create a Blob from the JSON string
-                    let blob = new Blob([jsonString], { type: 'application/json' });
-
-                    // Generate a URL for the Blob
-                    let url = URL.createObjectURL(blob);
-
-                    // Download the file
-                    chrome.downloads.download({
-                        url: url,
-                        filename: 'collections.json'  // Optional
-                    });
-                }
-            },
-            // {
-            //     title: 'To Bookmarks',
-            //     action: () => {
-            //         console.log('to bookmarks')
-            //     }
-            // }
-        ]
-
-    },
-    import: {
-        title: 'Import',
-        imports: [
-            {
-                title: 'From JSON',
-                action: () => {
-                }
-            },
-            // {
-            //     title: 'From Bookmarks',
-            //     action: () => {
-            //         loadingBookmarksState.value = true;
-            //         addCollectionsFromBookmarks().then(() => {
-            //             loadingBookmarksState.value = false;
-            //         })
-            //     }
-            // }
-        ]
-    },
-    settings: {
+const items = [
+    {
         title: 'Settings',
         action: () => {
-
+            settingsOverlayActive.value = true;
         }
-    }
-}
+    },
+    {
+        title: 'Export',
+        action: () => {
+            // Convert JavaScript object to JSON string
+            let jsonString = JSON.stringify({ 'Collections': collections.value });
 
+            // Create a Blob from the JSON string
+            let blob = new Blob([jsonString], { type: 'application/json' });
+
+            // Generate a URL for the Blob
+            let url = URL.createObjectURL(blob);
+
+            // Download the file
+            chrome.downloads.download({
+                url: url,
+                filename: 'collections.json'  // Optional
+            });
+        }
+    },
+    {
+        title: 'Import',
+        action: () => {
+            jsonUploadOverlayActive.value = true;
+        }
+
+    },
+
+]
 
 
 </script>

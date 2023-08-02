@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto rounded-0 d-flex flex-column" width="600" :min-height="400">
+  <v-card class="mx-auto rounded-0 d-flex flex-column" width="550" :min-height="600">
     <app-toolbar />
 
     <v-window v-model="popupMode" class="flex-grow-1">
@@ -17,16 +17,61 @@
       <v-window-item :value="PopupMode.EDIT_COLLECTION">
         <edit-collection-window></edit-collection-window>
       </v-window-item>
+
+      <!-- EDIT SUB-COLLECTION -->
+      <v-window-item :value="PopupMode.EDIT_SUBCOLLECTION">
+        <edit-collection-window></edit-collection-window>
+      </v-window-item>
     </v-window>
 
-    <v-overlay v-model="loadingBookmarksState" contained class="align-center justify-center">
-      <v-progress-circular
-        :size="70"
-        :width="7"
-        color="purple"
-        indeterminate
-      ></v-progress-circular>
+    <!-- LOADING OVERLAY -->
+    <v-overlay v-model="loadingOverlayState" contained class="align-center justify-center">
+      <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
     </v-overlay>
+
+    <!-- IMPORT OVERLAY -->
+    <v-overlay v-model="jsonUploadOverlayActive" contained class="align-center justify-center">
+      <v-card class="pa-5" width="400" height="150">
+        <v-file-input label="File input" variant="outlined" show-size color="purple" base-color="purple"
+          id="jsonFileInput"></v-file-input>
+        <v-card-actions class="d-flex justify-center w-100">
+          <v-btn variant="elevated" color="purple" @click="jsonUploadOverlayActive = false">
+            cancel
+          </v-btn>
+          <v-btn variant="elevated" color="purple" @click="importCollections">
+            import
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-overlay>
+
+
+    <!-- SETTINGS OVERLAY -->
+    <v-overlay v-model="settingsOverlayActive" contained class="align-center justify-center">
+      <v-card class="pa-5 h-100" width="500" height="300">
+        <div class="d-flex flex-column align-center">
+          <div class="d-flex align-center w-100">
+            <v-select class="px-3 mt-3 w-100" label="Default Theme" :items="['light', 'dark']" variant="solo-filled"
+              v-model="defaultTheme" append-icon="mdi-theme-light-dark" @update:model-value="toggleTheme"></v-select>
+          </div>
+          <v-select class="px-3 mt-3 w-100" label="Default Collection" :items="collections" variant="solo-filled"
+            v-model="defaultCollection" return-object @update:model-value="() => {
+              currentCollection = defaultCollection
+            }"></v-select>
+        </div>
+
+        <v-card-actions class="d-flex justify-center w-100 mt-auto">
+          <v-btn variant="elevated" color="purple" @click="settingsOverlayActive = false">
+            cancel
+          </v-btn>
+          <v-btn variant="elevated" color="purple" :loading="loadingSaveSettingsState" @click="saveSettings">
+            save
+          </v-btn>
+        </v-card-actions>
+
+      </v-card>
+    </v-overlay>
+
   </v-card>
 </template>
 
@@ -38,13 +83,16 @@ import AppToolbar from "./components/appToolbar.vue";
 import CollectionsWindow from "./components/collectionsWindow.vue";
 import EditCollectionWindow from "./components/editCollectionWindow.vue";
 import { useCollectionStore } from "./stores/collections";
-import { useBookmarkStore } from "./stores/bookmarks";
+import { useSettingsStore } from "./stores/settings";
+
 
 const collectionStore = useCollectionStore();
-const { popupMode } = storeToRefs(collectionStore);
+const { popupMode, jsonUploadOverlayActive, loadingOverlayState, collections, currentCollection } = storeToRefs(collectionStore);
+const { importCollections } = collectionStore;
 
-const bookmarkStore = useBookmarkStore();
-const { loadingBookmarksState } = storeToRefs(bookmarkStore);
+const settingsStore = useSettingsStore();
+const { settingsOverlayActive, loadingSaveSettingsState, defaultCollection, defaultTheme } = storeToRefs(settingsStore);
+const { toggleTheme, saveSettings } = settingsStore;
 
 </script>
 

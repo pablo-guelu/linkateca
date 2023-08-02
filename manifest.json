@@ -12,8 +12,6 @@
         "storage",
         "tabs",
         "downloads",
-        "bookmarks",
-        "favicons",
         "unlimitedStorage"
     ],
     "web_accessible_resources": [

@@ -1,12 +1,20 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { Ref, computed, ref } from 'vue';
 import { Collection, PopupMode, CollectionEditMode } from '../types';
+import { useSettingsStore } from './settings';
+import { useTheme } from 'vuetify';
 
 export const useCollectionStore = defineStore('collection', () => {
 
+    const settingsStore = useSettingsStore();
+    const { defaultCollection, defaultTheme } = storeToRefs(settingsStore);
+    const { saveSettings } = settingsStore;
+
+    const theme = useTheme();
+
     const popupMode = ref();
 
-    const defaultCollection: Collection = {
+    const emptyCollection: Collection = {
         title: '',
         notes: '',
         links: [],
@@ -14,12 +22,11 @@ export const useCollectionStore = defineStore('collection', () => {
     }
 
     const collections: Ref<Collection[]> = ref([]);
-    const currentCollection: Ref<Collection> = ref({ ...defaultCollection });
+    const currentCollection: Ref<Collection> = ref({ ...emptyCollection });
 
     chrome.storage.local.get(['linkaTeca']).then(result => {
         console.log(result);
         collections.value = result.linkaTeca ? result.linkaTeca : [];
-
 
         collections.value.forEach((collection) => {
             if (typeof collection.links !== 'undefined' && !Array.isArray(collection.links)) {
@@ -27,19 +34,50 @@ export const useCollectionStore = defineStore('collection', () => {
             }
         });
 
-        currentCollection.value = collections.value[0] || { ...defaultCollection };
-        console.log(collections.value)
+        console.log(collections.value);
     });
 
-    const currentCollectionIndex = computed(() => collections.value.indexOf(currentCollection.value));
+    chrome.storage.local.get(['linkaTecaSettings']).then(result => {
+        console.log(result);
+
+        if (result.linkaTecaSettings) {
+
+            if (collections.value.length > 0) {
+                defaultCollection.value = result.linkaTecaSettings.defaultCollection;
+                currentCollection.value = result.linkaTecaSettings.defaultCollection;
+
+                if (typeof currentCollection.value.links !== 'undefined' && !Array.isArray(currentCollection.value.links)) {
+                    currentCollection.value.links = Object.keys(currentCollection.value.links).length === 0 ? [] : Object.values(currentCollection.value.links)
+                }
+            }
+
+            theme.global.name.value = result.linkaTecaSettings.defaultTheme;
+            defaultTheme.value = result.linkaTecaSettings.defaultTheme;
+        }
+    });
+
+    const currentCollectionIndex = computed(() => {
+        return collections.value.findIndex((collection) => {
+            return collection.title === currentCollection.value.title
+        });
+    });
 
     const collectionEditMode = ref('');
 
     const addCollection = () => {
         collectionEditMode.value = CollectionEditMode.NEW;
-        currentCollection.value = { ...defaultCollection };
+        currentCollection.value = { ...emptyCollection };
         popupMode.value = PopupMode.EDIT_COLLECTION;
     };
+
+    const parentCollection = ref();
+
+    // const addSubCollection = () => {
+    //     collectionEditMode.value = CollectionEditMode.NEW;
+    //     parentCollection.value = currentCollection.value;
+    //     currentCollection.value = { ...emptyCollection };
+    //     popupMode.value = PopupMode.EDIT_SUBCOLLECTION;
+    // }
 
     const editCollection = () => {
         collectionEditMode.value = CollectionEditMode.EDIT;
@@ -47,6 +85,12 @@ export const useCollectionStore = defineStore('collection', () => {
     }
 
     const collectionForm = ref<HTMLFormElement>();
+
+    const checkCurrentAndDefault = () => {
+        if (defaultCollection.value.title === currentCollection.value.title) {
+            saveSettings();
+        }
+    }
 
     const saveCollection = async () => {
 
@@ -69,6 +113,8 @@ export const useCollectionStore = defineStore('collection', () => {
                 .then(() => {
                     popupMode.value = PopupMode.COLLECTIONS;
                 });
+
+            checkCurrentAndDefault();
         }
     }
 
@@ -85,30 +131,75 @@ export const useCollectionStore = defineStore('collection', () => {
 
         chrome.storage.local.set({ 'linkaTeca': updatedCollections }).then(() => {
             console.log('collections: ', collections.value);
-            currentCollection.value = { ...defaultCollection };
+            currentCollection.value = { ...emptyCollection };
         });
+
+
     }
 
-    const validationRules = [
-        (value: string) => {
-            if (value) return true
-            return 'Required field.'
+    const jsonUploadOverlayActive = ref(false);
+    const loadingOverlayState = ref(false);
+
+    const convertJsonToJsObject = (jsonString: any) => {
+        return JSON.parse(jsonString);
+    }
+
+    const importCollections = () => {
+        const fileInput = document.getElementById('jsonFileInput');
+        if (fileInput instanceof HTMLInputElement) {
+            const file = fileInput.files![0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+
+                    jsonUploadOverlayActive.value = false;
+                    loadingOverlayState.value = true;
+
+                    try {
+
+                        const jsonString = event.target?.result;
+                        const jsObject = convertJsonToJsObject(jsonString);
+                        console.log(jsObject);
+
+                        let updatedCollections = [...collections.value, ...jsObject.Collections];
+
+                        collections.value = updatedCollections;
+
+                        chrome.storage.local.set({ 'linkaTeca': updatedCollections })
+                            .then(() => {
+                                popupMode.value = PopupMode.COLLECTIONS;
+                                loadingOverlayState.value = false;
+                            });
+
+                    } catch (error) {
+                        console.error('Error parsing the JSON file:', error);
+                        loadingOverlayState.value = false;
+                    }
+                };
+                reader.readAsText(file);
+            } else {
+                console.error('No file selected.');
+            }
         }
-    ];
+    }
 
     return {
         popupMode,
         collections,
         currentCollection,
         currentCollectionIndex,
-        defaultCollection,
+        emptyCollection,
         collectionForm,
+        jsonUploadOverlayActive,
+        loadingOverlayState,
         addCollection,
         editCollection,
         closeEdit,
         saveCollection,
         deleteCollection,
+        importCollections,
+        parentCollection,
         collectionSelectKey,
-        validationRules
     }
 })

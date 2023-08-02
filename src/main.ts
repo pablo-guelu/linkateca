@@ -18,6 +18,6 @@ const vuetify = createVuetify({
         defaultSet: 'mdi',
         sets: {},
     }
-})
+});
 
 createApp(App).use(vuetify).use(pinia).mount('#app')
