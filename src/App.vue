@@ -1,10 +1,10 @@
 <template>
-  <v-card class="mx-auto rounded-0 d-flex flex-column" width="550" :min-height="600">
+  <v-card class="mx-auto rounded-0 d-flex flex-column" width="550" :min-height="550">
     <app-toolbar />
 
-    <v-window v-model="popupMode" class="flex-grow-1">
+    <v-window v-model="popupMode" class="flex-grow-1 h-100">
       <!-- COLLECTIONS -->
-      <v-window-item :value="PopupMode.COLLECTIONS">
+      <v-window-item :value="PopupMode.COLLECTIONS" class="h-100">
         <collections-window></collections-window>
       </v-window-item>
 
@@ -17,11 +17,7 @@
       <v-window-item :value="PopupMode.EDIT_COLLECTION">
         <edit-collection-window></edit-collection-window>
       </v-window-item>
-
-      <!-- EDIT SUB-COLLECTION -->
-      <v-window-item :value="PopupMode.EDIT_SUBCOLLECTION">
-        <edit-collection-window></edit-collection-window>
-      </v-window-item>
+      
     </v-window>
 
     <!-- LOADING OVERLAY -->
@@ -30,10 +26,11 @@
     </v-overlay>
 
     <!-- IMPORT OVERLAY -->
-    <v-overlay v-model="jsonUploadOverlayActive" contained class="align-center justify-center">
-      <v-card class="pa-5" width="400" height="150">
-        <v-file-input label="File input" variant="outlined" show-size color="purple" base-color="purple"
-          id="jsonFileInput"></v-file-input>
+    <v-overlay v-model="jsonUploadOverlayActive" contained class="align-center justify-center" :content-class="'overlay__display'">
+      <v-card class="pa-5" min-width="500" min-height="500">
+          <v-textarea variant="solo-filled" label="Paste your collections  in JSON format here" rows="15" v-model="collectionsJSON">
+
+          </v-textarea>
         <v-card-actions class="d-flex justify-center w-100">
           <v-btn variant="elevated" color="purple" @click="jsonUploadOverlayActive = false">
             cancel
@@ -55,9 +52,7 @@
               v-model="defaultTheme" append-icon="mdi-theme-light-dark" @update:model-value="toggleTheme"></v-select>
           </div>
           <v-select class="px-3 mt-3 w-100" label="Default Collection" :items="collections" variant="solo-filled"
-            v-model="defaultCollection" return-object @update:model-value="() => {
-              currentCollection = defaultCollection
-            }"></v-select>
+            v-model="currentCollection" return-object></v-select>
         </div>
 
         <v-card-actions class="d-flex justify-center w-100 mt-auto">
@@ -85,15 +80,23 @@ import EditCollectionWindow from "./components/editCollectionWindow.vue";
 import { useCollectionStore } from "./stores/collections";
 import { useSettingsStore } from "./stores/settings";
 
-
 const collectionStore = useCollectionStore();
-const { popupMode, jsonUploadOverlayActive, loadingOverlayState, collections, currentCollection } = storeToRefs(collectionStore);
+const { popupMode, jsonUploadOverlayActive, loadingOverlayState, collections, currentCollection, collectionsJSON } = storeToRefs(collectionStore);
 const { importCollections } = collectionStore;
 
 const settingsStore = useSettingsStore();
-const { settingsOverlayActive, loadingSaveSettingsState, defaultCollection, defaultTheme } = storeToRefs(settingsStore);
+const { settingsOverlayActive, loadingSaveSettingsState, defaultTheme } = storeToRefs(settingsStore);
 const { toggleTheme, saveSettings } = settingsStore;
 
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.overlay__display {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+}
+
+</style>

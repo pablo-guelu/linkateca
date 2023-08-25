@@ -15,7 +15,10 @@
             </v-card>
         </v-menu>
 
-        <v-btn plain @click="popupMode = PopupMode.COLLECTIONS"><v-toolbar-title
+        <v-btn plain @click="() => {
+            currentCollection = collections[0];
+            popupMode = PopupMode.COLLECTIONS
+            }"><v-toolbar-title
                 class="ms-1">linkaTeca</v-toolbar-title></v-btn>
 
         <div v-if="popupMode == PopupMode.COLLECTIONS" class="flex-grow-1 d-flex justify-end align-center">
@@ -47,7 +50,7 @@ const { searchActive, search } = storeToRefs(linkStore);
 const { addLink } = linkStore;
 
 const collectionStore = useCollectionStore();
-const { popupMode, collections, jsonUploadOverlayActive } = storeToRefs(collectionStore);
+const { popupMode, collections, jsonUploadOverlayActive, currentCollection } = storeToRefs(collectionStore);
 const { addCollection } = collectionStore;
 
 const settingsStore = useSettingsStore();

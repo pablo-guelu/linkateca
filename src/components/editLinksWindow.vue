@@ -14,7 +14,7 @@
         <v-btn variant="elevated" color="blue-darken-3" @click="closeEdit">
             CANCEL
         </v-btn>
-        <v-btn variant="elevated" color="blue-darken-3" :loading="saveButtonLoading" @click="saveLink">
+        <v-btn variant="elevated" color="blue-darken-3" :loading="saveButtonLoading" @click="saveLink(currentCollection)">
             SAVE
         </v-btn>
     </v-card-actions>

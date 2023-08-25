@@ -1,22 +1,7 @@
-import { defineStore, storeToRefs } from "pinia";
-import { useCollectionStore } from "./collections";
-import { useSettingsStore } from "./settings";
+import { defineStore } from "pinia";
 import { Collection } from "../types";
 
 export const useUtilsStore = defineStore('utils', () => {
-
-    const collectionStore = useCollectionStore();
-    const { currentCollection } = storeToRefs(collectionStore);
-
-    const settingsStore = useSettingsStore();
-    const { defaultCollection } = storeToRefs(settingsStore);
-    const { saveSettings } = settingsStore;
-
-    const checkCurrentAndDefault = () => {
-        if (defaultCollection.value.title === currentCollection.value.title) {
-            saveSettings();
-        }
-    }
 
     const validationRuleRequiredField = [
         (value: string) => {
@@ -35,7 +20,5 @@ export const useUtilsStore = defineStore('utils', () => {
     return {
         validationRuleRequiredCollection,
         validationRuleRequiredField,
-        checkCurrentAndDefault
     }
-
 })

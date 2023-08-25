@@ -2,18 +2,29 @@
     <div class="d-flex align-center">
         <v-select class="px-3 mt-3" label="Collection" :items="collections" variant="solo-filled"
             v-model="currentCollection" return-object @update:model-value="(value) => {
-                currentCollectionIndex = value.index
-                console.log(currentCollectionIndex, currentCollection);
-            }" :key="collectionSelectKey"></v-select>
+                currentCollectionIndex = collections.findIndex(coll => coll.id === value.id)
+                console.log(currentCollectionIndex, currentCollection)
+            }">
+        </v-select>
         <div class="d-flex pe-3" v-if="collections.length > 0">
-            <!-- <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-folder-plus" @click="addSubCollection"></v-btn> -->
+            <v-btn v-if="currentCollection && currentCollection.parentId !== ''" class="ma-1" size="small" color="deep-purple-darken-2"
+                icon="mdi-folder-arrow-up" @click="switchToParent(collections, currentCollection.parentId)"></v-btn>
+            <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-folder-plus" @click="addSubcollection"></v-btn>
             <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-pencil" @click="editCollection"></v-btn>
-            <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-delete"
-                @click="deleteCollection"></v-btn>
+            <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-delete" @click="() => {
+                collections = deleteCollection(collections, currentCollection.id)
+            }"></v-btn>
         </div>
     </div>
 
-    <v-data-table height="450" :headers="headers" :items="currentCollection.links" items-per-page="6" :search="search">
+    <div class="d-flex align-center" v-if="currentCollection && currentCollection.subCollections.length > 0">
+        <v-select class="px-3 mt-3" label="Subcollections" :items="currentCollection.subCollections" variant="solo-filled"
+            v-model="currentSubcollection" return-object @update:model-value="(val) => switchCollection(val)">
+        </v-select>
+    </div>
+
+
+    <v-data-table class="h-100" :headers="headers" :items="currentCollection.links" items-per-page="6" :search="search">
         <!-- link display -->
         <template v-slot:item="{ item }">
             <v-list class="pa-0">
@@ -33,7 +44,6 @@
                         </v-list-item-subtitle>
                     </v-fade-transition>
 
-
                     <template v-slot:append>
                         <!-- go to -->
                         <v-btn class="ma-1" flat icon="mdi-link-variant" size="32" :href="item.raw.url"
@@ -41,10 +51,12 @@
                         <!-- edit -->
                         <v-btn class="ma-1" flat icon="mdi-pencil" size="32" @click="editLink(item.index)"></v-btn>
                         <!-- delete -->
-                        <v-btn class="ma-1" flat icon="mdi-delete" size="32" @click="deleteLink(item.index)"></v-btn>
+                        <v-btn class="ma-1" flat icon="mdi-delete" size="32" @click="() => {
+                            console.log('clicking delete')
+                            modifyCollection(collections, currentCollection.id, deleteLink, [item.index, currentCollection])
+                        }
+                            "></v-btn>
                     </template>
-
-
 
                 </v-list-item>
                 <v-divider></v-divider>
@@ -63,8 +75,8 @@ import { useCollectionStore } from '../stores/collections';
 import { Link } from '../types';
 
 const collectionStore = useCollectionStore();
-const { collections, currentCollection, collectionSelectKey, currentCollectionIndex } = storeToRefs(collectionStore);
-const { editCollection, deleteCollection } = collectionStore;
+const { collections, currentCollection, currentCollectionIndex, currentSubcollection } = storeToRefs(collectionStore);
+const { editCollection, deleteCollection, switchCollection, switchToParent, modifyCollection, addSubcollection } = collectionStore;
 
 const linkStore = useLinkStore();
 const { search } = storeToRefs(linkStore);
@@ -78,6 +90,7 @@ const headers = ref([
 const expandNotes = (link: Link) => {
     link.active = link.active ? false : true
 }
+
 
 </script>
 

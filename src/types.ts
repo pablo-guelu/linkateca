@@ -7,11 +7,12 @@ export interface Link {
 }
 
 export interface Collection {
+    id: string,
     title: string,
     notes: string
     links: Link[],
-    parent?: Collection,
-    subCollections?: Collection[],
+    parentId: string, 
+    subCollections: Collection[],
     active: boolean
 }
 

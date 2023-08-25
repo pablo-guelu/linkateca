@@ -21,7 +21,7 @@
                             <span>Copied to clipboard!</span>
                         </v-tooltip>
                         <!-- delete -->
-                        <v-btn class="ma-1" flat icon="mdi-delete" size="32" @click="deleteLink(item.raw.id)"></v-btn>
+                        <v-btn class="ma-1" flat icon="mdi-delete" size="32" @click="deleteLink(item.raw.id, currentCollection)"></v-btn>
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
@@ -36,10 +36,14 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import { storeToRefs } from 'pinia';
 import { useLinkStore } from '../stores/links.ts';
 import { ref } from 'vue';
+import { useCollectionStore } from '../stores/collections';
 
 const linkStore = useLinkStore();
 const { links, search } = storeToRefs(linkStore);
 const { editLink, deleteLink, copyLink } = linkStore;
+
+const collectionStore = useCollectionStore();
+    const { currentCollection } = storeToRefs(collectionStore);
 
 const headers = ref([
     { title: 'Title', key: 'title' },
