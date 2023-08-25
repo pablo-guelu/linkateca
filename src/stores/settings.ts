@@ -26,34 +26,6 @@ export const useSettingsStore = defineStore('settings', () => {
         }
     });
 
-    // const saveSettings = () => {
-
-    //     loadingSaveSettingsState.value = true;
-
-    //     const selectedTheme = defaultTheme.value;
-
-    //     if (collections.value.length > 0) {
-    //         [collections.value[0], collections.value[defaultCollectionCurrentIndex.value]] = [
-    //             collections.value[defaultCollectionCurrentIndex.value],
-    //             collections.value[0],
-    //         ];
-    //     }
-
-    //     let updatedCollections = [...collections.value];
-    //     chrome.storage.local.set({ 'linkaTeca': updatedCollections })
-
-    //     chrome.storage.local.set({
-    //         'linkaTecaSettings': {
-    //             defaultTheme: selectedTheme
-    //         }
-    //     }).catch(error => {
-    //         console.log(error);
-    //     });
-
-    //     loadingSaveSettingsState.value = false;
-    //     settingsOverlayActive.value = false;
-    // }
-
     const saveSettings = () => {
         loadingSaveSettingsState.value = true;
     

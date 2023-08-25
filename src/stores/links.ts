@@ -54,7 +54,6 @@ export const useLinkStore = defineStore('link', () => {
     const saveLink = async (collection: Collection) => {
 
         let updatedLinks = collection.links;
-        console.log(updatedLinks);
 
         const { valid } = await linkForm.value?.validate();
 
@@ -86,11 +85,7 @@ export const useLinkStore = defineStore('link', () => {
 
         collection.links = updatedLinks;
 
-        console.log(collection);
-
         collections.value = replaceCollection(collections.value, collection.id, collection);
-
-        console.log(collections.value);
     }
 
     const copyLink = async (link: Link) => {
@@ -100,7 +95,6 @@ export const useLinkStore = defineStore('link', () => {
             setTimeout(() => {
                 link.active = false;
             }, 500);
-            console.log('Link copied to clipboard');
         } catch (err) {
             console.log('Failed to copy link: ', err);
         }

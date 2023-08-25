@@ -35,7 +35,6 @@ export const useCollectionStore = defineStore('collection', () => {
     }
 
     chrome.storage.local.get(['linkaTeca']).then(result => {
-        console.log(result);
         collections.value = result.linkaTeca ? result.linkaTeca : [];
 
         if (!Array.isArray(collections.value)) {
@@ -44,15 +43,11 @@ export const useCollectionStore = defineStore('collection', () => {
 
         if (collections.value.length > 0) {
             collections.value.forEach((collection) => {
-                console.log('converting');
                 convertSubcollectionsToArray(collection);
             });
         }
 
         currentCollection.value = collections.value[0] ? collections.value[0] : { ...emptyCollection };
-
-        console.log(collections.value, currentCollection.value, currentCollectionIndex.value);
-
     });
 
     const currentCollectionIndex = ref(0);
@@ -91,8 +86,6 @@ export const useCollectionStore = defineStore('collection', () => {
                 updatedCollections.push(currentCollection.value); // Add a new collection
             }
 
-            console.log(updatedCollections);
-
             collections.value = updatedCollections;
 
             chrome.storage.local.set({ 'linkaTeca': updatedCollections })
@@ -121,10 +114,9 @@ export const useCollectionStore = defineStore('collection', () => {
         });
 
         chrome.storage.local.set({ 'linkaTeca': updatedCollections }).then(() => {
-            console.log('collections: ', updatedCollections);
             currentCollection.value = updatedCollections[0];
         });
-        
+
         return updatedCollections;
     }
 
@@ -139,11 +131,8 @@ export const useCollectionStore = defineStore('collection', () => {
         jsonUploadOverlayActive.value = false;
         loadingOverlayState.value = true;
 
-        console.log(typeof (collectionsJSON.value), collectionsJSON.value)
-
         try {
             const jsObject = JSON.parse(collectionsJSON.value);
-            console.log(jsObject);
 
             let updatedCollections = [...collections.value, ...jsObject.Collections];
 
@@ -185,8 +174,6 @@ export const useCollectionStore = defineStore('collection', () => {
 
     const saveSubcollection = async () => {
 
-        console.log('subcollection edit')
-
         let updatedCollections = [...collections.value];
 
         const { valid } = await collectionForm.value?.validate();
@@ -200,8 +187,6 @@ export const useCollectionStore = defineStore('collection', () => {
                 currentCollection.value.subCollections.push(currentSubcollection.value);
                 updatedCollections[currentCollectionIndex.value] = currentCollection.value;
             }
-
-            console.log(updatedCollections);
 
             collections.value = updatedCollections;
 
@@ -226,8 +211,6 @@ export const useCollectionStore = defineStore('collection', () => {
         currentCollection.value = { ...currentSubcollection.value };
 
         currentSubcollection.value = { ...emptyCollection };
-
-        console.log(currentCollection.value);
     }
 
     const switchToParent = (collections: Collection[], parentId: string): void => {
@@ -243,7 +226,6 @@ export const useCollectionStore = defineStore('collection', () => {
     }
 
     const modifyCollection = async (collections: Collection[], subCollectionId: string, modificationCallback: Function, args: any[]) => {
-        console.log('working modify');
 
         const modifiedCollections = [...collections]; // Create a shallow copy of the original array
 
@@ -270,18 +252,15 @@ export const useCollectionStore = defineStore('collection', () => {
 
         chrome.storage.local.set({ 'linkaTeca': updatedCollections })
             .then(() => {
-                console.log('collections updated');
                 popupMode.value = PopupMode.COLLECTIONS;
             });
 
         return updatedCollections;
     }
 
-    const updateCollections = (collections: Collection[], targetId: string, newCollection: Collection, deleteCol?: boolean): Collection[] => {
+    const updateCollections = (collections: Collection[], targetId: string, newCollection: Collection,): Collection[] => {
 
         let updatedCollections: Collection[] = []
-
-        console.log(collectionEditMode.value, newCollection.parentId);
 
         if (collectionEditMode.value == CollectionEditMode.EDIT) {
             updatedCollections = collections.map(collection => {
@@ -315,7 +294,6 @@ export const useCollectionStore = defineStore('collection', () => {
 
         chrome.storage.local.set({ 'linkaTeca': updatedCollections })
             .then(() => {
-                console.log('collections updated');
                 popupMode.value = PopupMode.COLLECTIONS;
             });
 

@@ -3,7 +3,6 @@
         <v-select class="px-3 mt-3" label="Collection" :items="collections" variant="solo-filled"
             v-model="currentCollection" return-object @update:model-value="(value) => {
                 currentCollectionIndex = collections.findIndex(coll => coll.id === value.id)
-                console.log(currentCollectionIndex, currentCollection)
             }">
         </v-select>
         <div class="d-flex pe-3" v-if="collections.length > 0">
@@ -52,7 +51,6 @@
                         <v-btn class="ma-1" flat icon="mdi-pencil" size="32" @click="editLink(item.index)"></v-btn>
                         <!-- delete -->
                         <v-btn class="ma-1" flat icon="mdi-delete" size="32" @click="() => {
-                            console.log('clicking delete')
                             modifyCollection(collections, currentCollection.id, deleteLink, [item.index, currentCollection])
                         }
                             "></v-btn>

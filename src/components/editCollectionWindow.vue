@@ -27,12 +27,7 @@ import { useUtilsStore } from '../stores/utils';
 const collectionStore = useCollectionStore();
 const { currentCollection, collectionForm, collections } = storeToRefs(collectionStore);
 const { closeEdit, updateCollections } = collectionStore;
-
 const utilsStore = useUtilsStore();
 const { validationRuleRequiredField } = utilsStore;
-
 const saveButtonLoading: Ref<boolean> = ref(false);
-
-console.log(currentCollection);
-
 </script>
