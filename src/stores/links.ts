@@ -6,7 +6,7 @@ import { useCollectionStore } from './collections';
 export const useLinkStore = defineStore('link', () => {
 
     const collectionStore = useCollectionStore();
-    const { popupMode, collections, currentCollection, currentCollectionIndex } = storeToRefs(collectionStore);
+    const { popupMode, collections, currentCollection } = storeToRefs(collectionStore);
     const { replaceCollection } = collectionStore;
 
     const links: Ref<Link[]> = ref([]);

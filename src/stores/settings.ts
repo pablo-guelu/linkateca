@@ -6,7 +6,7 @@ import { useCollectionStore } from "./collections";
 export const useSettingsStore = defineStore('settings', () => {
 
     const collectionStore = useCollectionStore();
-    const { collections } = storeToRefs(collectionStore);
+    const { collections, currentCollectionIndex } = storeToRefs(collectionStore);
 
     const settingsOverlayActive = ref(false);
 
@@ -32,14 +32,14 @@ export const useSettingsStore = defineStore('settings', () => {
         const selectedTheme = defaultTheme.value;
     
         if (collections.value.length > 0) {
-            const currentIndex = defaultCollectionCurrentIndex.value;
-            if (currentIndex >= 0 && currentIndex < collections.value.length) {
-                [collections.value[0], collections.value[currentIndex]] = [
-                    collections.value[currentIndex],
+            
+            if (currentCollectionIndex.value >= 0 && currentCollectionIndex.value < collections.value.length) {
+                [collections.value[0], collections.value[currentCollectionIndex.value]] = [
+                    collections.value[currentCollectionIndex.value],
                     collections.value[0],
                 ];
             } else {
-                console.error("Invalid collection index:", currentIndex);
+                console.error("Invalid collection index:", currentCollectionIndex.value);
             }
         }
     

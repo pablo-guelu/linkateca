@@ -52,7 +52,9 @@
               v-model="defaultTheme" append-icon="mdi-theme-light-dark" @update:model-value="toggleTheme"></v-select>
           </div>
           <v-select class="px-3 mt-3 w-100" label="Default Collection" :items="collections" variant="solo-filled"
-            v-model="currentCollection" return-object></v-select>
+            v-model="currentCollection" return-object @update:model-value="(value) => {
+                currentCollectionIndex = collections.findIndex(coll => coll.id === value.id)
+            }"></v-select>
         </div>
 
         <v-card-actions class="d-flex justify-center w-100 mt-auto">
@@ -81,7 +83,7 @@ import { useCollectionStore } from "./stores/collections";
 import { useSettingsStore } from "./stores/settings";
 
 const collectionStore = useCollectionStore();
-const { popupMode, jsonUploadOverlayActive, loadingOverlayState, collections, currentCollection, collectionsJSON } = storeToRefs(collectionStore);
+const { popupMode, jsonUploadOverlayActive, loadingOverlayState, collections, currentCollection, currentCollectionIndex, collectionsJSON } = storeToRefs(collectionStore);
 const { importCollections } = collectionStore;
 
 const settingsStore = useSettingsStore();
