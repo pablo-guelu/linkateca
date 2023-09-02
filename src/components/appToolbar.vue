@@ -87,10 +87,7 @@ const items = [
         action: () => {
             jsonUploadOverlayActive.value = true;
         }
-
     },
-
 ]
-
 
 </script>

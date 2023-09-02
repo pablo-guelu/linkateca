@@ -22,7 +22,6 @@
         </v-select>
     </div>
 
-
     <v-data-table class="h-100" :headers="headers" :items="currentCollection.links" items-per-page="6" :search="search">
         <!-- link display -->
         <template v-slot:item="{ item }">

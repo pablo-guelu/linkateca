@@ -34,6 +34,3 @@ export const LinkEditMode = {
     EDIT: 'edit'
 } as const
 
-export interface ImportedData {
-    Collections: Collection[];
-}

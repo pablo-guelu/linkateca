@@ -16,7 +16,6 @@ export const useSettingsStore = defineStore('settings', () => {
     const loadingSaveSettingsState = ref(false);
 
     const defaultTheme = ref('light');
-    const defaultCollectionCurrentIndex = ref(0);
 
     chrome.storage.local.get(['linkaTecaSettings']).then(result => {
 
@@ -73,7 +72,6 @@ export const useSettingsStore = defineStore('settings', () => {
         settingsOverlayActive,
         loadingSaveSettingsState,
         defaultTheme,
-        defaultCollectionCurrentIndex,
         saveSettings,
     }
 
