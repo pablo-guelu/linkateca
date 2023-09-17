@@ -1,18 +1,39 @@
-# Vue 3 + TypeScript + Vite
+# linkaTeca
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This extension allows you to keep your links organized and available. It's different to browser bookmarks since you can organize your links into collections and subcollections.
+Also, it allows you to take notes and use a friendly interface to edit the attributes of your links.
 
-## Recommended IDE Setup
+## Basic Usage
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+To create a collection just click **+ COLLECTION** on the extension's toolbar.
+You'll see an edit window where you can set a title for the collection and an optional description.
 
-## Type Support For `.vue` Imports in TS
+Once you have a collection you can now add links to that collection by clicking the **"+"** button next to that collection's title (the current collection) or by clicking **+ LINK** on the extension's toolbar. By default, linkaTeca will fill out the title and link fileds with the data of the current webpage you're. You can change those links manually to whatever title or links you want to save to your collection.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+Collection can also have subcollections. A subcollection is nothing but a collection inside another collection. In other words, can form trees of collections or anidate collections that are related to each other. You can add a subcollection by clicking the folder icon button next to that collection's title (second from left to right). 
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## Settings
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+From the menu (top left icon) you can set the default settings for linkaTeca.
+The current settings are:
+
+- Theme: light or dark
+- Default Collection: the default collection (current collection) that appears when you open the extension.
+
+## Export Collections
+
+You can export all your collections in JSON format. This is useful if you want to make a backup of your collections (see considerations). You can do this by clicking **"export"** from the toolbar menu (top left icon).
+
+## Import Collections
+
+You can also import collections in JSON format to linkaTeca. You can do this by clicking **"import"** from the toolbar menu (top left icon) and pasting your collections on the text area.
+
+## Considerations
+
+- All data of this extension is securely saved in the local storage of your machine using chrome's api. Therefore, removing the extension of uninstalling/update your browser might result in the lost of the data.
+
+- As data is saved locally, no one but the person using your computer's browser has access to your collections data.
+
+## Report Issues or bugs
+
+You can write a [direct email](mailto:pablo.guelu@gmail.com) to the developer or  create an [issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue) on this GitHub repo.

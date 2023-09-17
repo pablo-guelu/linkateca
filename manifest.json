@@ -24,7 +24,7 @@
             ],
             "extension_ids": [
                 "*"
-            ]   
+            ]
         }
     ],
     "host_permissions": [
@@ -46,6 +46,9 @@
     ],
     "action": {
         "default_popup": "index.html"
+    },
+    "chrome_url_overrides": {
+        "newtab": "index.html"
     },
     "manifest_version": 3
 }

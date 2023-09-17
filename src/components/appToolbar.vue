@@ -3,7 +3,12 @@
 
         <v-menu>
             <template v-slot:activator="{ props: menu }">
-                <v-btn variant="text" icon="mdi-menu" color="white" v-bind="menu"></v-btn>
+                <v-btn variant="text" color="white" class="px-1" v-bind="menu">
+                    <v-avatar>
+                        <v-icon icon="mdi-menu" size="x-large"></v-icon>
+                    </v-avatar>
+                    <v-tooltip text="Menu" location="bottom" activator="parent" offset="2"></v-tooltip>
+                </v-btn>
             </template>
 
             <v-card>
@@ -19,7 +24,7 @@
             currentCollection = collections[0];
             popupMode = PopupMode.COLLECTIONS
             }"><v-toolbar-title
-                class="ms-1">linkaTeca</v-toolbar-title></v-btn>
+                class="ms-1 px-1">linkaTeca</v-toolbar-title></v-btn>
 
         <div v-if="popupMode == PopupMode.COLLECTIONS" class="flex-grow-1 d-flex justify-end align-center">
             <v-slide-x-reverse-transition>
@@ -30,8 +35,14 @@
                 @click="addCollection">collection</v-btn>
             <v-btn v-if="!searchActive" prepend-icon="mdi-plus" class="mx-1" variant="outlined"
                 @click="addLink">link</v-btn>
-            <v-btn icon="mdi-magnify" class="mx-1" @click="searchActive ? searchActive = false : searchActive = true"
+
+            <v-tooltip text="Search" location="bottom" offset="2">
+                <template v-slot:activator="{props}">
+                    <v-btn v-bind="props" icon="mdi-magnify" class="mx-1" @click="searchActive ? searchActive = false : searchActive = true"
                 :active="searchActive"></v-btn>
+                </template>
+            </v-tooltip>    
+            
         </div>
 
     </v-toolbar>

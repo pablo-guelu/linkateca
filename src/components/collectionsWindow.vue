@@ -1,18 +1,49 @@
 <template>
     <div class="d-flex align-center">
-        <v-select class="px-3 mt-3" label="Collection" :items="collections" variant="solo-filled"
+        <v-select single-line class="px-3 mt-3" label="Collection" :items="collections" variant="solo-filled"
             v-model="currentCollection" return-object @update:model-value="(value) => {
-                currentCollectionIndex = collections.findIndex(coll => coll.id === value.id)
+                currentCollectionIndex = collections.findIndex(coll => coll.id === value.id);
             }">
         </v-select>
         <div class="d-flex pe-3" v-if="collections.length > 0">
-            <v-btn v-if="currentCollection && currentCollection.parentId !== ''" class="ma-1" size="small" color="deep-purple-darken-2"
-                icon="mdi-folder-arrow-up" @click="switchToParent(collections, currentCollection.parentId)"></v-btn>
-            <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-folder-plus" @click="addSubcollection"></v-btn>
-            <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-pencil" @click="editCollection"></v-btn>
-            <v-btn class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-delete" @click="() => {
-                collections = deleteCollection(collections, currentCollection.id)
-            }"></v-btn>
+
+            <v-tooltip text="Add link" location="bottom">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-plus"
+                        @click="addLink"></v-btn>
+                </template>
+            </v-tooltip>
+
+            <v-tooltip text="Switch to parent" location="bottom">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-if="currentCollection && currentCollection.parentId !== ''" class="ma-1" size="small"
+                        color="deep-purple-darken-2" icon="mdi-folder-arrow-up"
+                        @click="switchToParent(collections, currentCollection.parentId)" v-bind="props"></v-btn>
+                </template>
+            </v-tooltip>
+
+            <v-tooltip text="Add Subcollection" location="bottom">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-folder-plus"
+                        @click="addSubcollection"></v-btn>
+                </template>
+            </v-tooltip>
+
+            <v-tooltip text="Edit Collection" location="bottom">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-pencil"
+                        @click="editCollection"></v-btn>
+                </template>
+            </v-tooltip>
+
+            <v-tooltip text="Delete Collection" location="bottom">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" class="ma-1" size="small" color="deep-purple-darken-2" icon="mdi-delete" @click="() => {
+                        collections = deleteCollection(collections, currentCollection.id)
+                    }"></v-btn>
+                </template>
+            </v-tooltip>
+
         </div>
     </div>
 
@@ -22,42 +53,73 @@
         </v-select>
     </div>
 
-    <v-data-table class="h-100" :headers="headers" :items="currentCollection.links" items-per-page="6" :search="search">
+    <v-data-table class="h-100" ref="linkTitleRefs" :headers="headers" :items="currentCollection.links" items-per-page="6"
+        :search="search">
         <!-- link display -->
         <template v-slot:item="{ item }">
-            <v-list class="pa-0">
-                <v-list-item :height="item.raw.active ? 130 : 65">
 
-                    <v-list-item-title class="d-flex" @click="expandNotes(item.raw)">
-                        <v-icon v-if="item.raw.favicon" class="me-1">
-                            <v-img :src="item.raw.favicon" :alt="`${item.raw.title} icon`"></v-img>
-                        </v-icon>
-                        <span class="d-inline-block text-truncate" style="max-width: 425px;">{{ item.raw.title }}</span>
-                    </v-list-item-title>
+            <div class="w-100">
+                <v-expansion-panels :readonly="item.raw.notes == ''">
+                    <v-expansion-panel>
+                        <v-expansion-panel-title class="px-4 py-2"
+                            :style="{ 'cursor': item.raw.notes == '' ? 'default' : 'pointer' }">
+                            <template v-slot:default>
+                                <div class="d-inline-flex text-truncate" :style="{ 'width': '375px' }">
+                                    <v-icon v-if="item.raw.favicon" class="me-2">
+                                        <v-img :src="item.raw.favicon" :alt="`${item.raw.title} icon`"></v-img>
+                                    </v-icon>
+                                    <v-hover v-slot="{ props }">
+                                        <v-card :id="`linkTitle-${item.index}`"
+                                            class="w-100 d-inline-block pt-1 text-truncate" v-bind="props" variant="flat">
+                                            {{ item.raw.title }}
+                                        </v-card>
+                                        <v-tooltip :text="item.raw.title" location="bottom" activator="parent"
+                                            :disabled="linkTitleTooltipDisabled[item.index]"></v-tooltip>
+                                    </v-hover>
+                                </div>
+                            </template>
+                            <template v-slot:actions>
+                                <div class="d-flex">
 
+                                    <!-- go to -->
+                                    <v-tooltip text="Go to link" location="bottom" offset="2">
+                                        <template v-slot:activator="{ props }">
+                                            <v-btn v-bind="props" class="ma-1" flat icon="mdi-link-variant" size="36"
+                                                :href="item.raw.url" target="_blank"></v-btn>
+                                        </template>
+                                    </v-tooltip>
 
-                    <v-fade-transition>
-                        <v-list-item-subtitle v-show="item.raw.active" class="mt-2">
-                            <div class="ps-7"> {{ item.raw.notes }} </div>
-                        </v-list-item-subtitle>
-                    </v-fade-transition>
+                                    <!-- edit -->
+                                    <v-tooltip text="Edit link" location="bottom" offset="2">
+                                        <template v-slot:activator="{ props }">
+                                            <v-btn v-bind="props" class="ma-1" flat icon="mdi-pencil" size="36"
+                                                @click="editLink(item.index)"></v-btn>
+                                        </template>
+                                    </v-tooltip>
 
-                    <template v-slot:append>
-                        <!-- go to -->
-                        <v-btn class="ma-1" flat icon="mdi-link-variant" size="32" :href="item.raw.url"
-                            target="_blank"></v-btn>
-                        <!-- edit -->
-                        <v-btn class="ma-1" flat icon="mdi-pencil" size="32" @click="editLink(item.index)"></v-btn>
-                        <!-- delete -->
-                        <v-btn class="ma-1" flat icon="mdi-delete" size="32" @click="() => {
-                            modifyCollection(collections, currentCollection.id, deleteLink, [item.index, currentCollection])
-                        }
-                            "></v-btn>
-                    </template>
+                                    <!-- delete -->
+                                    <v-tooltip text="Delete link" location="bottom" offset="2">
+                                        <template v-slot:activator="{ props }">
+                                            <v-btn v-bind="props" class="ma-1" flat icon="mdi-delete" size="36" @click="() => {
+                                                modifyCollection(collections, currentCollection.id, deleteLink, [item.index, currentCollection])
+                                            }"></v-btn>
+                                        </template>
+                                    </v-tooltip>
 
-                </v-list-item>
-                <v-divider></v-divider>
-            </v-list>
+                                </div>
+                            </template>
+                        </v-expansion-panel-title>
+                        <v-expansion-panel-text>
+                            <span class="font-weight-regular text-body-1 d-inline-block text-truncate w-100">
+                                {{ item.raw.notes }}
+                            </span>
+                        </v-expansion-panel-text>
+                    </v-expansion-panel>
+                </v-expansion-panels>
+            </div>
+
+            <v-divider></v-divider>
+
         </template>
 
     </v-data-table>
@@ -69,25 +131,27 @@ import { storeToRefs } from 'pinia';
 import { useLinkStore } from '../stores/links.ts';
 import { ref } from 'vue';
 import { useCollectionStore } from '../stores/collections';
-import { Link } from '../types';
+import { onMounted } from 'vue';
+import { watch } from 'vue';
 
 const collectionStore = useCollectionStore();
-const { collections, currentCollection, currentCollectionIndex, currentSubcollection } = storeToRefs(collectionStore);
-const { editCollection, deleteCollection, switchCollection, switchToParent, modifyCollection, addSubcollection } = collectionStore;
+const { collections, currentCollection, currentCollectionIndex, currentSubcollection, linkTitleTooltipDisabled } = storeToRefs(collectionStore);
+const { editCollection, deleteCollection, switchCollection, switchToParent, modifyCollection, addSubcollection, checkLinkTitleWidths } = collectionStore;
 
 const linkStore = useLinkStore();
 const { search } = storeToRefs(linkStore);
-const { editLink, deleteLink } = linkStore;
+const { editLink, deleteLink, addLink } = linkStore;
 
 const headers = ref([
     { title: 'Title', key: 'title' },
     { title: 'Notes', key: 'notes' }
 ]);
 
-const expandNotes = (link: Link) => {
-    link.active = link.active ? false : true
-}
+onMounted(() => {
+    setTimeout(checkLinkTitleWidths, 1000)
+})
 
+watch(currentCollection, checkLinkTitleWidths);
 
 </script>
 

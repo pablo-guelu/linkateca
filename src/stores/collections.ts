@@ -238,6 +238,16 @@ export const useCollectionStore = defineStore('collection', () => {
         }
     }
 
+    const linkTitleTooltipDisabled: Ref<boolean[]> = ref([]);
+
+    const checkLinkTitleWidths = () => {
+        linkTitleTooltipDisabled.value.length = 0;
+        currentCollection.value.links.forEach((_obj, index) => {
+            const linkTitle = document.querySelector(`#linkTitle-${index}`)
+            linkTitleTooltipDisabled.value.push(linkTitle ? linkTitle.scrollWidth <= linkTitle.clientWidth : true);
+        })
+    }
+
     const replaceCollection = (collections: Collection[], targetId: string, newCollection: Collection): Collection[] => {
         const updatedCollections = collections.map(collection => {
             if (collection.id === targetId) {
@@ -328,6 +338,8 @@ export const useCollectionStore = defineStore('collection', () => {
         modifyCollection,
         replaceCollection,
         collectionEditMode,
-        deleteCollection
+        deleteCollection,
+        checkLinkTitleWidths,
+        linkTitleTooltipDisabled,
     }
 })
