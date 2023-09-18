@@ -8,6 +8,9 @@ Also, it allows you to take notes and use a friendly interface to edit the attri
 To create a collection just click **+ COLLECTION** on the extension's toolbar.
 You'll see an edit window where you can set a title for the collection and an optional description.
 
+![Screenshot from 2023-09-18 01-57-56](https://github.com/pablo-guelu/linkateca/assets/64326483/635e9804-1f37-4b21-a7f8-448936f4f0d3)
+
+
 Once you have a collection you can now add links to that collection by clicking the **"+"** button next to that collection's title (the current collection) or by clicking **+ LINK** on the extension's toolbar. By default, linkaTeca will fill out the title and link fileds with the data of the current webpage you're. You can change those links manually to whatever title or links you want to save to your collection.
 
 Collection can also have subcollections. A subcollection is nothing but a collection inside another collection. In other words, can form trees of collections or anidate collections that are related to each other. You can add a subcollection by clicking the folder icon button next to that collection's title (second from left to right). 
