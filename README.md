@@ -11,9 +11,12 @@ You'll see an edit window where you can set a title for the collection and an op
 ![Screenshot from 2023-09-18 01-57-56](https://github.com/pablo-guelu/linkateca/assets/64326483/635e9804-1f37-4b21-a7f8-448936f4f0d3)
 
 
-Once you have a collection you can now add links to that collection by clicking the **"+"** button next to that collection's title (the current collection) or by clicking **+ LINK** on the extension's toolbar. By default, linkaTeca will fill out the title and link fileds with the data of the current webpage you're. You can change those links manually to whatever title or links you want to save to your collection.
+Once you have a collection you can now add links to that collection by clicking the **"+"** button next to that collection's title (the current collection) or by clicking **+ LINK** on the extension's toolbar. By default, linkaTeca will fill out the title and link fields with the data of the current webpage you're. You can change those links manually to whatever title or links you want to save to your collection.
 
-Collection can also have subcollections. A subcollection is nothing but a collection inside another collection. In other words, can form trees of collections or anidate collections that are related to each other. You can add a subcollection by clicking the folder icon button next to that collection's title (second from left to right). 
+![Screenshot from 2023-09-18 02-06-30](https://github.com/pablo-guelu/linkateca/assets/64326483/9ec9fd33-726a-455a-89cb-89f1cde4295f)
+
+
+Collection can also have subcollections. A subcollection is nothing but a collection inside another collection. In other words, can form trees of collections or nest collections that are related to each other. You can add a subcollection by clicking the folder icon button next to that collection's title (second from left to right). 
 
 ## Settings
 
@@ -22,6 +25,9 @@ The current settings are:
 
 - Theme: light or dark
 - Default Collection: the default collection (current collection) that appears when you open the extension.
+
+![Screenshot from 2023-09-18 02-08-15](https://github.com/pablo-guelu/linkateca/assets/64326483/296825e4-24ad-471f-b827-23b641a8aa88)
+
 
 ## Export Collections
 
@@ -33,7 +39,7 @@ You can also import collections in JSON format to linkaTeca. You can do this by 
 
 ## Considerations
 
-- All data of this extension is securely saved in the local storage of your machine using chrome's api. Therefore, removing the extension of uninstalling/update your browser might result in the lost of the data.
+- All data of this extension is securely saved in the local storage of your machine using Chrome's API. Therefore, removing the extension of uninstalling/updating your browser might result in the loss of the data.
 
 - As data is saved locally, no one but the person using your computer's browser has access to your collections data.
 
