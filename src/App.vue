@@ -1,28 +1,29 @@
 <template>
   <v-card class="mx-auto rounded-0 d-flex flex-column" width="550" :min-height="550">
+
     <app-toolbar />
 
-    <v-window v-model="popupMode" class="flex-grow-1 h-100">
-      <!-- COLLECTIONS -->
-      <v-window-item :value="PopupMode.COLLECTIONS" class="h-100">
-        <collections-window></collections-window>
-      </v-window-item>
-
-      <!-- EDIT LINKS -->
-      <v-window-item :value="PopupMode.EDIT_LINK">
-        <edit-links-window />
-      </v-window-item>
-
-      <!-- EDIT COLLECTION -->
-      <v-window-item :value="PopupMode.EDIT_COLLECTION">
-        <edit-collection-window></edit-collection-window>
-      </v-window-item>
+    <v-window v-model="popupMode" class="d-flex flex-grow-1">
+      
+        <!-- COLLECTIONS -->
+        <v-window-item :value="PopupMode.COLLECTIONS" class="h-100 w-100">
+          <collections-window></collections-window>
+        </v-window-item>
+        <!-- EDIT LINKS -->
+        <v-window-item :value="PopupMode.EDIT_LINK" class="h-100 w-100">
+          <edit-links-window />
+        </v-window-item>
+        <!-- EDIT COLLECTION -->
+        <v-window-item :value="PopupMode.EDIT_COLLECTION" class="h-100 w-100">
+          <edit-collection-window></edit-collection-window>
+        </v-window-item>
+      
       
     </v-window>
 
     <!-- LOADING OVERLAY -->
     <v-overlay v-model="loadingOverlayState" contained class="align-center justify-center">
-      <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
+      <v-progress-circular :size="70" :width="7" color="blue-darken-2" indeterminate></v-progress-circular>
     </v-overlay>
 
     <!-- IMPORT OVERLAY -->
@@ -32,10 +33,10 @@
 
           </v-textarea>
         <v-card-actions class="d-flex justify-center w-100">
-          <v-btn variant="elevated" color="purple" @click="jsonUploadOverlayActive = false">
+          <v-btn variant="elevated" color="blue-darken-2" @click="jsonUploadOverlayActive = false">
             cancel
           </v-btn>
-          <v-btn variant="elevated" color="purple" @click="importCollections">
+          <v-btn variant="elevated" color="blue-darken-2" @click="importCollections">
             import
           </v-btn>
         </v-card-actions>
@@ -58,10 +59,10 @@
         </div>
 
         <v-card-actions class="d-flex justify-center w-100 mt-auto">
-          <v-btn variant="elevated" color="purple" @click="settingsOverlayActive = false">
+          <v-btn variant="elevated" color="blue-darken-2" @click="settingsOverlayActive = false">
             cancel
           </v-btn>
-          <v-btn variant="elevated" color="purple" :loading="loadingSaveSettingsState" @click="saveSettings">
+          <v-btn variant="elevated" color="blue-darken-2" :loading="loadingSaveSettingsState" @click="saveSettings">
             save
           </v-btn>
         </v-card-actions>
@@ -99,6 +100,10 @@ const { toggleTheme, saveSettings } = settingsStore;
   width: 100%;
   height: 100%;
   padding: 16px;
+}
+
+:deep(.v-window__container){
+  width: 100%;
 }
 
 </style>
