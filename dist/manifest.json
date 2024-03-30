@@ -16,43 +16,20 @@
   ],
   "web_accessible_resources": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
       "resources": [
         "_favicon/*"
       ],
-      "use_dynamic_url": false
-    },
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "resources": [
-        "assets/content.ts-740db5e0.js"
-      ],
-      "use_dynamic_url": true
+      "extension_ids": [
+        "*"
+      ]
     }
   ],
   "background": {
     "service_worker": "service-worker-loader.js",
     "type": "module"
   },
-  "content_scripts": [
-    {
-      "js": [
-        "assets/content.ts-loader-96fee152.js"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
-    }
-  ],
   "action": {
     "default_popup": "index.html"
-  },
-  "chrome_url_overrides": {
-    "newtab": "index.html"
   },
   "manifest_version": 3
 }

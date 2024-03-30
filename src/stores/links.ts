@@ -30,12 +30,7 @@ export const useLinkStore = defineStore('link', () => {
         getCurrentTab().then(async (response) => {
             currentLink.value.url = response.url;
             currentLink.value.title = response.title;
-            const icon = await chrome.tabs.sendMessage(response.id, { getFavicon: "favicon" });
-
-            if (icon) {
-                currentLink.value.favicon = icon.favicon;
-            }
-
+            currentLink.value.favicon = response.favIconUrl;
         }).catch((error) => {
             console.log(error)
         });
@@ -108,9 +103,10 @@ export const useLinkStore = defineStore('link', () => {
 
     const getCurrentTab = async () => {
         let [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+        
         if (tab.url && tab.title && tab.id) {
-            return { url: tab.url, title: tab.title, id: tab.id }
-        } else return { url: '', title: '', id: '' || 0 };
+            return { url: tab.url, title: tab.title, id: tab.id, favIconUrl: tab.favIconUrl || '' };
+        } else return { url: '', title: '', id: '' || 0, favIconUrl: ''};
     }
 
     const validationRules = [

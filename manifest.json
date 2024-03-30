@@ -19,9 +19,6 @@
             "resources": [
                 "_favicon/*"
             ],
-            "matches": [
-                "<all_urls>"
-            ],
             "extension_ids": [
                 "*"
             ]
@@ -31,21 +28,8 @@
         "service_worker": "src/background.ts",
         "type": "module"
     },
-    "content_scripts": [
-        {
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "src/content.ts"
-            ]
-        }
-    ],
     "action": {
         "default_popup": "index.html"
-    },
-    "chrome_url_overrides": {
-        "newtab": "index.html"
     },
     "manifest_version": 3
 }
