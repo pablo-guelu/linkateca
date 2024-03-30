@@ -1,7 +1,7 @@
 export interface Link {
     url: string,
     title: string,
-    notes: string
+    notes: string,
     favicon: string,
     active: boolean
 }
@@ -9,7 +9,7 @@ export interface Link {
 export interface Collection {
     id: string,
     title: string,
-    notes: string
+    notes: string,
     links: Link[],
     parentId: string, 
     subCollections: Collection[],

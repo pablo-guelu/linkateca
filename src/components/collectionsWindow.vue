@@ -66,6 +66,9 @@
                             <v-icon v-if="item.raw.favicon" class="mx-2">
                                 <v-img :src="item.raw.favicon" :alt="`${item.raw.title} icon`"></v-img>
                             </v-icon>
+                            <v-icon v-else class="mx-2" icon="mdi-earth">
+                                
+                            </v-icon>
                         </template>
                         <template v-slot:title-actions>
                             <div class="d-flex">

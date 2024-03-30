@@ -1,0 +1,1 @@
+chrome.runtime.onMessage.addListener((i,c,e)=>{if(i.getFavicon==="favicon"){let n="";const o=document.querySelector('link[rel="icon"]')||document.querySelector('link[rel="shortcut icon"]');return o instanceof HTMLLinkElement?(n=new URL(o.href,window.location).toString(),e({favicon:n})):(n=`${window.location.origin}/favicon.ico`,e({favicon:n})),!0}});
