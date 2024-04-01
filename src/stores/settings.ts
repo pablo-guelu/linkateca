@@ -11,17 +11,18 @@ export const useSettingsStore = defineStore('settings', () => {
     const settingsOverlayActive = ref(false);
 
     const theme = useTheme();
-    const toggleTheme = () => theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+    const toggleTheme = () => theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
 
     const loadingSaveSettingsState = ref(false);
-
     const defaultTheme = ref('light');
+    const appColor = ref('blue-darken-2');
 
     chrome.storage.local.get(['linkaTecaSettings']).then(result => {
 
         if (result.linkaTecaSettings) {
             theme.global.name.value = result.linkaTecaSettings.defaultTheme;
             defaultTheme.value = result.linkaTecaSettings.defaultTheme;
+            appColor.value = result.linkaTecaSettings.appColor;
         }
     });
 
@@ -53,7 +54,8 @@ export const useSettingsStore = defineStore('settings', () => {
     
         chrome.storage.local.set({
             'linkaTecaSettings': {
-                defaultTheme: selectedTheme
+                defaultTheme: selectedTheme,
+                appColor: appColor.value,
             }
         }, () => {
             if (chrome.runtime.lastError) {
@@ -72,6 +74,7 @@ export const useSettingsStore = defineStore('settings', () => {
         settingsOverlayActive,
         loadingSaveSettingsState,
         defaultTheme,
+        appColor,
         saveSettings,
     }
 

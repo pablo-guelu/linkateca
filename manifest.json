@@ -1,6 +1,6 @@
 {
     "name": "linkaTeca",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "extension to organize links to articles, books, posts",
     "icons": {
         "16": "src/assets/picon16.png",
@@ -12,7 +12,8 @@
         "storage",
         "activeTab",
         "downloads",
-        "unlimitedStorage"
+        "unlimitedStorage",
+        "contextMenus"
     ],
     "web_accessible_resources": [
         {
@@ -28,8 +29,19 @@
         "service_worker": "src/background.ts",
         "type": "module"
     },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://chat.openai.com/*"
+            ],
+            "js": [
+                "src/content.ts"
+            ]
+        }
+    ],
     "action": {
         "default_popup": "index.html"
     },
     "manifest_version": 3
 }
+

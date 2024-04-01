@@ -1,10 +1,9 @@
 # linkaTeca
 
-This extension allows you to keep your links organized and available. It's different to browser bookmarks since you can organize your links into collections and subcollections.
-Also, it allows you to take notes and use a friendly interface to edit the attributes of your links.
+This extension allows you to keep your links organized and available. It's bookmar manager with an easy to use interface and added functionalities to work with chatGPT prompts.
 
 ## Basic Usage
-
+    
 To create a collection just click **+ COLLECTION** on the extension's toolbar.
 You'll see an edit window where you can set a title for the collection and an optional description.
 
