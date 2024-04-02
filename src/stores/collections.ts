@@ -1,11 +1,13 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { Ref, ref } from 'vue';
 import { Collection, PopupMode, CollectionEditMode } from '../types';
 import { uuid } from 'vue-uuid';
+import { useUtilsStore } from './utils';
 
 export const useCollectionStore = defineStore('collection', () => {
 
-    const popupMode = ref();
+    const utilsStore = useUtilsStore();
+    const { popupMode } = storeToRefs(utilsStore);
 
     const emptyCollection: Collection = {
         id: uuid.v4(),
@@ -311,7 +313,6 @@ export const useCollectionStore = defineStore('collection', () => {
     }
 
     return {
-        popupMode,
         collections,
         currentCollection,
         currentCollectionIndex,

@@ -4,54 +4,32 @@
             <div class="d-flex align-center w-100">
                 <!-- PREVIOUS COLLECTION -->
                 <v-btn class="ma-1" size="small" icon="mdi-chevron-left" @click="previousCollection"></v-btn>
-                <v-select single-line class="px-1 w-100" label="Collection" :items="collections" variant="solo-filled"
+                <v-autocomplete single-line density="compact" class="px-1 w-100" label="Collection" :items="collections" variant="outlined"
                     v-model="currentCollection" return-object @update:model-value="(value) => {
                     currentCollectionIndex = collections.findIndex(coll => coll.id === value.id);
                 }">
-                </v-select>
+                </v-autocomplete>
                 <!-- NEXT COLLECTION -->
                 <v-btn class="ma-1" size="small" icon="mdi-chevron-right" @click="nextCollection"></v-btn>
             </div>
             <div class="d-flex align-center w-100 px-10"
                 v-if="currentCollection && currentCollection.subCollections.length > 0">
-                <v-select class="px-3 mt-3" label="Subcollections" :items="currentCollection.subCollections"
-                    variant="solo-filled" v-model="currentSubcollection" return-object
+                <v-select class="px-3 mt-3" density="compact" label="Subcollections" :items="currentCollection.subCollections"
+                    variant="outlined" v-model="currentSubcollection" return-object
                     @update:model-value="(val) => switchCollection(val)">
                 </v-select>
             </div>
-            <div class="d-flex pa-2" v-if="collections.length > 0">
-                <v-tooltip text="Add link" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" class="ma-1" size="small" color="blue-darken-2" icon="mdi-plus"
-                            @click="addLink"></v-btn>
-                    </template>
-                </v-tooltip>
-                <v-tooltip text="Switch to parent" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn v-if="currentCollection && currentCollection.parentId !== ''" class="ma-1" size="small"
-                            color="blue-darken-2" icon="mdi-folder-arrow-up"
-                            @click="switchToParent(collections, currentCollection.parentId)" v-bind="props"></v-btn>
-                    </template>
-                </v-tooltip>
-                <v-tooltip text="Add Subcollection" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" class="ma-1" size="small" color="blue-darken-2" icon="mdi-folder-plus"
-                            @click="addSubcollection"></v-btn>
-                    </template>
-                </v-tooltip>
-                <v-tooltip text="Edit Collection" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" class="ma-1" size="small" color="blue-darken-2" icon="mdi-pencil"
-                            @click="editCollection"></v-btn>
-                    </template>
-                </v-tooltip>
-                <v-tooltip text="Delete Collection" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" class="ma-1" size="small" color="blue-darken-2" icon="mdi-delete" @click="() => {
-                    collections = deleteCollection(collections, currentCollection.id)
-                }"></v-btn>
-                    </template>
-                </v-tooltip>
+
+
+            <div class="d-flex pa-2">
+                <div v-for="action, index in collectionsActions" :key="action.title">
+                    <v-tooltip :text="action.title" location="bottom">
+                        <template v-slot:activator="{ props }">
+                            <v-btn v-bind="props" class="ma-1" :disabled="index == 1 && currentCollection.parentId == ''" size="x-small" :color="appColor" :icon="action.icon"
+                                @click="action.action"></v-btn>
+                        </template>
+                    </v-tooltip>
+                </div>
             </div>
         </div>
 
@@ -114,6 +92,7 @@ import { ref } from 'vue';
 import { useCollectionStore } from '../stores/collections';
 import { onMounted } from 'vue';
 import { watch } from 'vue';
+import { useSettingsStore } from '../stores/settings';
 
 const collectionStore = useCollectionStore();
 const { collections, currentCollection, currentCollectionIndex, currentSubcollection } = storeToRefs(collectionStore);
@@ -122,6 +101,9 @@ const { editCollection, deleteCollection, switchCollection, switchToParent, modi
 const linkStore = useLinkStore();
 const { search } = storeToRefs(linkStore);
 const { editLink, deleteLink, addLink } = linkStore;
+
+const settingsStore = useSettingsStore();
+const { appColor } = storeToRefs(settingsStore);
 
 const headers = ref([
     { title: 'Title', key: 'title' },
@@ -143,6 +125,14 @@ const nextCollection = () => {
     currentCollectionIndex.value = currentCollectionIndex.value + 1 < collections.value.length ? currentCollectionIndex.value + 1 : 0
     currentCollection.value = collections.value[currentCollectionIndex.value]
 }
+
+const collectionsActions = [
+    { title: 'Add link', icon:'mdi-plus',  action: addLink },
+    { title: 'Switch to parent', icon:'mdi-folder-arrow-up', action: () => switchToParent(collections.value, currentCollection.value.parentId) },
+    { title: 'Add Subcollection', icon: 'mdi-folder-plus', action: addSubcollection },
+    { title: 'Edit Collection', icon: 'mdi-pencil', action: editCollection },
+    { title: 'Delete Collection', icon: 'mdi-delete', action: () => deleteCollection(collections.value, currentCollection.value.id) }
+]
 
 </script>
 

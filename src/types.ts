@@ -19,9 +19,11 @@ export interface Collection {
 export const PopupMode = {
     LINKS: 'linksMode',
     COLLECTIONS: 'collectionsMode',
+    PROMPTS: 'promptsMode',
     EDIT_LINK: 'editLinkMode',
     EDIT_COLLECTION: 'editCollectionMode',
-    EDIT_SUBCOLLECTION: 'editSubCollection'
+    EDIT_SUBCOLLECTION: 'editSubCollection',
+    EDIT_PROMPT: 'editPromptMode'
 } as const;
 
 export const CollectionEditMode = {
@@ -33,4 +35,11 @@ export const LinkEditMode = {
     NEW: 'new',
     EDIT: 'edit'
 } as const
+
+export interface Prompt {
+    id: string | number,
+    title: string,
+    prompt: string
+    active: boolean
+}
 

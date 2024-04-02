@@ -2,12 +2,16 @@ import { defineStore, storeToRefs } from 'pinia';
 import { Ref, ref } from 'vue';
 import { Collection, Link, LinkEditMode, PopupMode } from '../types';
 import { useCollectionStore } from './collections';
+import { useUtilsStore } from './utils';
 
 export const useLinkStore = defineStore('link', () => {
 
     const collectionStore = useCollectionStore();
-    const { popupMode, collections, currentCollection } = storeToRefs(collectionStore);
+    const { collections, currentCollection } = storeToRefs(collectionStore);
     const { replaceCollection } = collectionStore;
+
+    const utilsStore = useUtilsStore();
+    const { popupMode } = storeToRefs(utilsStore);
 
     const links: Ref<Link[]> = ref([]);
 

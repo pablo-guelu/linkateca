@@ -1,7 +1,11 @@
 import { defineStore } from "pinia";
-import { Collection } from "../types";
+import { Collection, PopupMode } from "../types";
+import { ref } from "vue";
 
 export const useUtilsStore = defineStore('utils', () => {
+
+    const popupMode = ref();
+    popupMode.value = PopupMode.COLLECTIONS;
 
     const validationRuleRequiredField = [
         (value: string) => {
@@ -18,6 +22,7 @@ export const useUtilsStore = defineStore('utils', () => {
     ]
 
     return {
+        popupMode,
         validationRuleRequiredCollection,
         validationRuleRequiredField,
     }
