@@ -69,9 +69,7 @@
                             <!-- delete -->
                             <v-tooltip text="Delete link" location="bottom" offset="2">
                                 <template v-slot:activator="{ props }">
-                                    <v-btn v-bind="props" class="ma-1" flat icon="mdi-delete" size="36" @click="() => {
-                    modifyCollection(collections, currentCollection.id, deleteLink, [index, currentCollection])
-                }"></v-btn>
+                                    <v-btn v-bind="props" class="ma-1" flat icon="mdi-delete" size="36" @click="deleteLink(currentCollection, index)"></v-btn>
                                 </template>
                             </v-tooltip>
                         </div>
@@ -96,11 +94,11 @@ import { useSettingsStore } from '../stores/settings';
 
 const collectionStore = useCollectionStore();
 const { collections, currentCollection, currentCollectionIndex, currentSubcollection } = storeToRefs(collectionStore);
-const { editCollection, deleteCollection, switchCollection, switchToParent, modifyCollection, addSubcollection, checkLinkTitleWidths } = collectionStore;
+const { editCollection, deleteCollection, switchCollection, switchToParent, deleteLink, addSubcollection, checkLinkTitleWidths, openCollectionLinks } = collectionStore;
 
 const linkStore = useLinkStore();
 const { search } = storeToRefs(linkStore);
-const { editLink, deleteLink, addLink } = linkStore;
+const { editLink, addLink } = linkStore;
 
 const settingsStore = useSettingsStore();
 const { appColor } = storeToRefs(settingsStore);
@@ -131,7 +129,8 @@ const collectionsActions = [
     { title: 'Switch to parent', icon:'mdi-folder-arrow-up', action: () => switchToParent(collections.value, currentCollection.value.parentId) },
     { title: 'Add Subcollection', icon: 'mdi-folder-plus', action: addSubcollection },
     { title: 'Edit Collection', icon: 'mdi-pencil', action: editCollection },
-    { title: 'Delete Collection', icon: 'mdi-delete', action: () => deleteCollection(collections.value, currentCollection.value.id) }
+    { title: 'Delete Collection', icon: 'mdi-delete', action: () => deleteCollection(collections.value, currentCollection.value.id) },
+    { title: 'Open all links', icon: 'mdi-card-multiple-outline', action: () => openCollectionLinks(currentCollection.value,)}
 ]
 
 </script>

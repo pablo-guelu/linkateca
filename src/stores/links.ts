@@ -75,18 +75,6 @@ export const useLinkStore = defineStore('link', () => {
         popupMode.value = PopupMode.COLLECTIONS;
     }
 
-    const deleteLink = (index: number, collection: Collection) => {
-
-        let updatedLinks = collection.links;
-        // create a new array without the deleted link
-
-        updatedLinks = [...updatedLinks.slice(0, index), ...updatedLinks.slice(index + 1)];
-
-        collection.links = updatedLinks;
-
-        collections.value = replaceCollection(collections.value, collection.id, collection);
-    }
-
     const copyLink = async (link: Link) => {
         try {
             await navigator.clipboard.writeText(link.url);
@@ -129,7 +117,6 @@ export const useLinkStore = defineStore('link', () => {
         editLink,
         saveLink,
         closeEdit,
-        deleteLink,
         copyLink,
         getCurrentTab,
         search,

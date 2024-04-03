@@ -42,17 +42,18 @@
         <v-btn v-else-if="popupMode == PopupMode.PROMPTS && !searchActive" size="x-small" class="mx-1 ms-auto"
             variant="outlined" @click="popupMode = PopupMode.COLLECTIONS">back</v-btn>
 
-        <v-tooltip text="Search" location="bottom" offset="2">
-            <template v-slot:activator="{ props }">
-                <v-btn v-bind="props" icon="mdi-magnify" class="mx-1"
-                    @click="searchActive ? searchActive = false : searchActive = true" :active="searchActive"></v-btn>
-            </template>
-        </v-tooltip>
-
-        <v-slide-x-reverse-transition>
-            <v-text-field v-if="searchActive" :hide-details="true" autofocus variant="solo-filled"
-                bg-color="transparent" density="compact" v-model="search" class="px-2"></v-text-field>
-        </v-slide-x-reverse-transition>
+        <div v-if="popupMode == PopupMode.COLLECTIONS || popupMode == PopupMode.PROMPTS" class="d-flex justify-end" :class="[{'flex-grow-1 flex-shrink-0': searchActive}]">
+            <v-tooltip text="Search" location="bottom" offset="2">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" icon="mdi-magnify" class="mx-1"
+                        @click="searchActive ? searchActive = false : searchActive = true" :active="searchActive"></v-btn>
+                </template>
+            </v-tooltip>
+            <v-slide-x-reverse-transition>
+                <v-text-field v-if="searchActive" :hide-details="true" autofocus variant="solo-filled"
+                    bg-color="transparent" density="compact" v-model="search" class="px-2"></v-text-field>
+            </v-slide-x-reverse-transition>
+        </div>
 
     </v-toolbar>
 </template>

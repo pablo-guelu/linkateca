@@ -227,17 +227,10 @@ export const useCollectionStore = defineStore('collection', () => {
         }
     }
 
-    const modifyCollection = async (collections: Collection[], subCollectionId: string, modificationCallback: Function, args: any[]) => {
-
-        const modifiedCollections = [...collections]; // Create a shallow copy of the original array
-
-        for (const collection of modifiedCollections) {
-            if (collection.parentId === '' || collection.subCollections.some(sub => sub.id === subCollectionId)) {
-                modificationCallback(...args);
-            } else if (collection.subCollections.length > 0) {
-                await modifyCollection(collection.subCollections, subCollectionId, modificationCallback, args);
-            }
-        }
+    const deleteLink = (collection: Collection, linkIndex: number) => {
+        const updatedCollection = collection.links.filter((_link, index) => index !== linkIndex);
+        collection.links = updatedCollection;
+        collections.value = replaceCollection(collections.value, collection.id, collection);
     }
 
     const linkTitleTooltipDisabled: Ref<boolean[]> = ref([]);
@@ -312,6 +305,13 @@ export const useCollectionStore = defineStore('collection', () => {
         return updatedCollections;
     }
 
+    //create a function that open all the links on different tabs of a collection
+    const  openCollectionLinks = (collection: Collection) => {
+        collection.links.forEach(link => {
+            chrome.tabs.create({ url: link.url });
+        });
+    }
+
     return {
         collections,
         currentCollection,
@@ -336,11 +336,12 @@ export const useCollectionStore = defineStore('collection', () => {
         currentSubCollectionIndex,
         switchCollection,
         switchToParent,
-        modifyCollection,
+        deleteLink,
         replaceCollection,
         collectionEditMode,
         deleteCollection,
         checkLinkTitleWidths,
         linkTitleTooltipDisabled,
+        openCollectionLinks
     }
 })

@@ -3,18 +3,9 @@
 
   const injectTime = performance.now();
   (async () => {
-    if ("")
-      await import(
-        /* @vite-ignore */
-        chrome.runtime.getURL("")
-      );
-    await import(
-      /* @vite-ignore */
-      chrome.runtime.getURL("vendor/vite-client.js")
-    );
     const { onExecute } = await import(
       /* @vite-ignore */
-      chrome.runtime.getURL("src/content.ts.js")
+      chrome.runtime.getURL("assets/content.ts-61b00fdc.js")
     );
     onExecute?.({ perf: { injectTime, loadTime: performance.now() - injectTime } });
   })().catch(console.error);

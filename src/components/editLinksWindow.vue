@@ -11,10 +11,10 @@
     </v-card-text>
 
     <v-card-actions class="mt-2 me-2 d-flex justify-end">
-        <v-btn variant="elevated" color="blue-darken-3" @click="closeEdit">
+        <v-btn variant="elevated" :color="appColor" @click="closeEdit">
             CANCEL
         </v-btn>
-        <v-btn variant="elevated" color="blue-darken-3" :loading="saveButtonLoading" @click="saveLink(currentCollection)">
+        <v-btn variant="elevated" :color="appColor" :loading="saveButtonLoading" @click="saveLink(currentCollection)">
             SAVE
         </v-btn>
     </v-card-actions>
@@ -26,6 +26,7 @@ import { Ref, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useCollectionStore } from '../stores/collections';
 import { useUtilsStore } from '../stores/utils';
+import { useSettingsStore } from '../stores/settings';
 
 const linkStore = useLinkStore();
 const { linkForm, currentLink} = storeToRefs(linkStore);
@@ -36,6 +37,9 @@ const { collections, currentCollection } = storeToRefs(collectionStore);
 
 const utilsStore = useUtilsStore();
 const { validationRuleRequiredField, validationRuleRequiredCollection } = utilsStore;
+
+const settingsStore = useSettingsStore();
+const { appColor } = storeToRefs(settingsStore);
 
 const saveButtonLoading: Ref<boolean> = ref(false);
 
