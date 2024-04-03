@@ -1,7 +1,7 @@
 {
     "name": "linkaTeca",
     "version": "0.3.0",
-    "description": "A simple extension to save and open collections of links and use chatGPT prompts",
+    "description": "Bookmark manager with an easy to use interface. This tool also includes functionalities to create and save your commonly used chatGPT prompts",
     "icons": {
         "16": "src/assets/picon16.png",
         "32": "src/assets/picon32.png",
