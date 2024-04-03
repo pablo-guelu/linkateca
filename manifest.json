@@ -1,7 +1,7 @@
 {
     "name": "linkaTeca",
-    "version": "0.2.0",
-    "description": "extension to organize links to articles, books, posts",
+    "version": "0.3.0",
+    "description": "A simple extension to save and open collections of links and use chatGPT prompts",
     "icons": {
         "16": "src/assets/picon16.png",
         "32": "src/assets/picon32.png",
