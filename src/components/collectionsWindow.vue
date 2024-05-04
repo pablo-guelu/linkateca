@@ -55,21 +55,21 @@
                             <!-- go to -->
                             <v-tooltip text="Go to link" location="bottom" offset="2">
                                 <template v-slot:activator="{ props }">
-                                    <v-btn v-bind="props" class="ma-1" flat icon="mdi-link-variant" size="36"
+                                    <v-btn v-bind="props" class="ma-1" flat icon="mdi-link-variant" size="x-small"
                                         :href="item.url" target="_blank"></v-btn>
                                 </template>
                             </v-tooltip>
                             <!-- edit -->
                             <v-tooltip text="Edit link" location="bottom" offset="2">
                                 <template v-slot:activator="{ props }">
-                                    <v-btn v-bind="props" class="ma-1" flat icon="mdi-pencil" size="36"
+                                    <v-btn v-bind="props" class="ma-1" flat icon="mdi-pencil" size="x-small"
                                         @click="editLink(index)"></v-btn>
                                 </template>
                             </v-tooltip>
                             <!-- delete -->
                             <v-tooltip text="Delete link" location="bottom" offset="2">
                                 <template v-slot:activator="{ props }">
-                                    <v-btn v-bind="props" class="ma-1" flat icon="mdi-delete" size="36" @click="deleteLink(currentCollection, index)"></v-btn>
+                                    <v-btn v-bind="props" class="ma-1" flat icon="mdi-delete" size="x-small" @click="deleteLink(currentCollection, index)"></v-btn>
                                 </template>
                             </v-tooltip>
                         </div>

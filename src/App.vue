@@ -56,6 +56,26 @@
       </v-card>
     </v-overlay>
 
+    <!-- EXPORT OVERLAY -->
+    <v-overlay v-model="exportOverlayActive" contained class="align-center justify-center"
+      :content-class="'overlay__display'">
+      <v-card class="pa-5" min-width="400" max-height="300">
+        <v-autocomplete single-line density="compact" class="w-100" label="Collection" :items="collections"
+          variant="outlined" v-model="currentCollection" return-object @update:model-value="(value) => {
+            currentCollectionIndex = collections.findIndex(coll => coll.id === value.id);
+          }"/>
+          <v-text-field label="Collection Name" density="compact" v-model="exportCollectionName" variant="outlined" />
+          <v-card-actions class="d-flex justify-center w-100">
+            <v-btn variant="elevated" :color="appColor" @click="exportOverlayActive = false">
+              cancel
+            </v-btn>
+            <v-btn variant="elevated" :color="appColor" @click="exportCollection">
+              export
+            </v-btn>
+          </v-card-actions>
+      </v-card>
+    </v-overlay>
+
     <!-- SETTINGS OVERLAY -->
     <v-overlay v-model="settingsOverlayActive" contained class="align-center justify-center">
       <settings-popup />
@@ -80,8 +100,8 @@ import { usePromptStore } from "./stores/prompts";
 import { useUtilsStore } from "./stores/utils";
 
 const collectionStore = useCollectionStore();
-const { jsonUploadOverlayActive, loadingOverlayState, collectionsJSON } = storeToRefs(collectionStore);
-const { importCollections } = collectionStore;
+const { jsonUploadOverlayActive, exportOverlayActive, exportCollectionName, loadingOverlayState, collectionsJSON, collections, currentCollection, currentCollectionIndex } = storeToRefs(collectionStore);
+const { importCollections, exportCollection } = collectionStore;
 
 const settingsStore = useSettingsStore();
 const { settingsOverlayActive, appColor } = storeToRefs(settingsStore);

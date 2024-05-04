@@ -124,6 +124,8 @@ export const useCollectionStore = defineStore('collection', () => {
 
 
     const jsonUploadOverlayActive = ref(false);
+    const exportOverlayActive = ref(false);
+    const exportCollectionName = ref('');
     const loadingOverlayState = ref(false);
 
     const collectionsJSON = ref('');
@@ -306,10 +308,29 @@ export const useCollectionStore = defineStore('collection', () => {
     }
 
     //create a function that open all the links on different tabs of a collection
-    const  openCollectionLinks = (collection: Collection) => {
+    const openCollectionLinks = (collection: Collection) => {
         collection.links.forEach(link => {
             chrome.tabs.create({ url: link.url });
         });
+    }
+
+    const exportCollection = (collection: Collection) => {
+        // Convert JavaScript object to JSON string
+        let jsonString = JSON.stringify({ exportCollectionName : collections.value });
+
+        // Create a Blob from the JSON string
+        let blob = new Blob([jsonString], { type: 'application/json' });
+
+        // Generate a URL for the Blob
+        let url = URL.createObjectURL(blob);
+
+        // Download the file
+        chrome.downloads.download({
+            url: url,
+            filename: 'collections.json'  // Optional
+        });
+
+        exportOverlayActive.value = false;
     }
 
     return {
@@ -319,6 +340,9 @@ export const useCollectionStore = defineStore('collection', () => {
         emptyCollection,
         collectionForm,
         jsonUploadOverlayActive,
+        exportOverlayActive,
+        exportCollectionName,
+        exportCollection,
         loadingOverlayState,
         addCollection,
         editCollection,
@@ -342,6 +366,6 @@ export const useCollectionStore = defineStore('collection', () => {
         deleteCollection,
         checkLinkTitleWidths,
         linkTitleTooltipDisabled,
-        openCollectionLinks
+        openCollectionLinks,
     }
 })
