@@ -1,6 +1,6 @@
 {
   "name": "linkaTeca",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Easy to use bookmark manager. It includes functionalities to create chatGPT prompts",
   "icons": {
     "16": "src/assets/icon16.png",
